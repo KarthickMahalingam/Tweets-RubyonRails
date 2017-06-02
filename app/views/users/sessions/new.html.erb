@@ -1,0 +1,27 @@
+<h2>Log in</h2>
+<div class="row" >
+  <div class="col-md-4">
+<%= form_for(resource, as: resource_name, url: session_path(resource_name) ,  class: 'form-horizontal' ) do |f| %>
+  <div class="form-group">
+    <%= f.label :email,   class: "col-md-10 control-label" %><br />
+    <div class="col-md-12"> <%= f.email_field :email, autofocus: true  , :class => 'form-control' %></div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :password ,   class: "col-md-12 control-label"%><br />
+    <div class="col-md-12"><%= f.password_field :password, autocomplete: "off",  :class => 'form-control'  %></div>
+  </div>
+
+  <% if devise_mapping.rememberable? -%>
+    <div class="form-group">
+      <%= f.check_box :remember_me, class: "col-md-2" %>
+      <%= f.label :remember_me %><br />
+    </div>
+  <% end %>
+  <div class="form-group">
+    <div class="col-md-7" ><br /><%= f.submit "Log in", :class =>  " btn btn-primary" %><br></div>
+  </div>
+<% end %>
+</div>
+</div>
+  <br>  <div class="col-md-7"><%= render "users/shared/links"   %></div>

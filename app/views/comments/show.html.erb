@@ -1,0 +1,33 @@
+<div class="jumbotron">
+  <% if user_signed_in? %>
+      <div align="right"> <%= link_to "Sign Out", destroy_user_session_path, :method => :delete, :class => 'btn btn-large btn-danger' %></div>
+      <h2><div align="left" > <%= link_to 'Go to my page', '/main/index' %></div></h2>
+      </div>
+      <h3>Comments of post shared by  <%= @user.first_name %> <%= @user.last_name %> </h3>
+      <h4><%= @user.first_name %> said "<%= @post.title %>"
+        at <%= ((Time.parse(DateTime.now.in_time_zone("Pacific Time (US & Canada)").to_s) - Time.parse(@post.created_at.in_time_zone("Pacific Time (US & Canada)").to_s))/3600).round %> hours ago </h4>
+      <h4>Expressed "<%=@post.status %> "</h4>
+      <div id="comments_block">
+      <% if @comment.count ==0 %>
+          <h4>No comments so far.. Be the first one to comment..</h4>
+      <% else %>
+          <h3>Status are commented by</h3>
+          <% @comment.each do |comment| %>
+              <% user= @user_detail.find(comment.author_id) %>
+             <h4> <%= user.first_name %> <%= user.last_name %> commented
+              " <%= comment.comment %> "
+               at <%= ((Time.parse(DateTime.now.in_time_zone("Pacific Time (US & Canada)").to_s) - Time.parse(comment.created_at.in_time_zone("Pacific Time (US & Canada)").to_s))/3600).round %> hours ago</h4>
+          <% end %>
+      <% end %>
+
+          <%= form_for :comments, url: {:controller => 'comments', :action => 'create' , :remote => 'false'}, class: 'form-inline' do |f| %>
+          <%= f.text_area :comment, placeholder: 'Type in your comments here' , :required => true, :rows => 4, style: 'width:40%;' %>
+              <%= f.hidden_field(:author_id, :value => current_user.id) %>
+              <%= f.hidden_field(:post_id, :value => @post.id) %>
+              <%= button_tag 'Shoot my comment', class: "btn btn-primary", disable_with: "Posting..." %>
+          <% end %>
+          <% else %>
+      <% end %>
+      </div>
+
+

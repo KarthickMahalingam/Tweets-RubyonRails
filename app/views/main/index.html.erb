@@ -1,0 +1,40 @@
+<div class="jumbotron">
+  <% if user_signed_in? %>
+      <div align="right"> <%= link_to "Sign Out", destroy_user_session_path, :method => :delete, :class => 'btn btn-large btn-danger' %></div>
+      <h2>Welcome back, <%=current_user.first_name %></h2>
+      <p class="lead">
+        You have signed in!  Welcome home!!
+      </p>
+      </div>
+      <%= form_for :post, url: {:controller =>'post' , :action => 'create', :remote => 'false'} , class: 'form-inline' do |f| %>
+          <div class="form-group " align="center">
+          <%= f.text_field :title, :size => 84, :required => true, placeholder: 'Give me an attractive title'%>
+          </div>
+          <div class="form-group " align="center"><%= f.text_area  :status,:required => true, :rows => 4, style: 'width:46.4%;' ,placeholder: 'Whats in your mind?' %>
+            <%= f.hidden_field(:author_id, :value => current_user.id ) %>
+            <br><%= button_tag  'Post my Status', class: "btn btn-primary", disable_with: "Posting..."  %>
+          </div>
+      <% end %>
+      <h3>Here are the status of your friends!!</h3><br><br>
+      <%  @post_all.each do | post| %>
+          <% @user_ids=@user_all.find(post.author_id) %>
+          <h4><%=@user_ids.first_name%> <%= @user_ids.last_name %> said <%= link_to post.title , controller: "comments", action:  'show', id: post.id %>
+            at <%=((Time.parse(DateTime.now.in_time_zone("Pacific Time (US & Canada)").to_s) - Time.parse(post.created_at.in_time_zone("Pacific Time (US & Canada)").to_s))/3600).round %> hours ago</h4>
+          <br>
+      <% end  %>
+
+  <% else %>
+      <h1>Welcome, new user!</h1>
+      <p class="lead">
+        You must sign in or sign up before you can access our super sweet,
+        top secret content.
+      </p>
+      <div class="row-fluid">
+        <div class="span6">
+          <%= link_to "Sign In", new_user_session_path, :class => "btn btn-success" %>
+        </div>
+        <div class="span6">
+          <%= link_to "Sign Up", new_user_registration_path, :class => "btn btn-success" %>
+        </div>
+      </div>
+  <% end %>
